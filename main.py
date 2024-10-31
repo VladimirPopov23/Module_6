@@ -1,14 +1,14 @@
 # module_6_2.py
-# 31.10.2024 в.2 Задача "Изменять нельзя получать"
+# 31.10.2024 в.3 Задача "Изменять нельзя получать"
 
 class Vehicle:
     __COLOR_VARIANTS = ['red', 'orange', 'yellow', 'green', 'blue', 'violet', 'black']
 
-    def __init__(self, owner, __model, __color, __engine_power):
-        self.owner = str(owner)
-        self.__model = str(__model)
-        self.__engine_power = int(__engine_power)
-        self.__color = str(__color)
+    def __init__(self, owner: str, model: str, color: str, engine_power: int):
+        self.owner = owner
+        self.__model = model
+        self.__engine_power = engine_power
+        self.__color = color
 
     def get_model(self):
         return f'Модель: {self.__model}'
