@@ -1,45 +1,100 @@
-# module_6_3.py
-# 01.11.2024 Задача "Мифическое наследование"
+# module6hard.py
+# 04.11.2024 Задание "Они все так похожи"
 
-class Horse:
-    def __init__(self):
-        self.x_distance = 0
-        self.sound = 'Frrr'
+class Figure:
+    sides_count = 0
 
-    def run(self, dx):
-        self.x_distance += dx
+    def __init__(self, sides, color):
+        self.__sides = sides  # (список сторон(целые числа)),
+        self.__color = color  # (список цветов в формате RGB)
+        self.filled = False  # (закрашенный, bool)
+
+    def get_color(self):  # возвращает список RGB цветов
+        return self.__color
+
+    def __is_valid_color(self, r, g, b):  # принимает параметры r, g, b
+        if (1 <= r <= 255 and isinstance(r, int) and 1 <= g <= 255 and isinstance(g, int) and 1 <= b <= 255
+                and isinstance(b, int)):  # проверяет корректность переданных значений перед установкой нового цвета
+            return True
+        else:
+            return False
+
+    def set_color(self, r, g, b):  # принимает параметры r, g, b
+        if self.__is_valid_color(r, g, b):  # проверяет их на корректность
+            self.__color = (r, g, b)  # и изменяет атрибут __color на соответствующие значения
+
+    def __is_valid_sides(self, *sides):  # служебный, принимает неограниченное кол-во сторон
+        for side in sides:
+            if isinstance(sides, int) and side > 0 and len(sides) == self.sides_count:
+                return True
+            else:
+                return False
+
+    def get_sides(self):  # возвращает значение/я атрибута __sides
+        return self.__sides
+
+    def __len__(self):  # возвращает периметр (сумму сторон) фигуры
+        return sum(self.__sides)
+
+    def set_sides(self, *new_sides):  # принимает новые стороны
+        if len(new_sides) != self.sides_count:  # если их значение не равно, то ничего не делать
+            pass
+        else:  # если равно меняем на новое значение
+            self.__sides = new_sides
 
 
-class Eagle:
-    def __init__(self):
-        self.y_distance = 0
-        self.sound = 'I train, eat, sleep, and repeat'
+class Circle(Figure):
+    sides_count = 1  # количество сторон
+    __radius = None
 
-    def fly(self, dy):
-        self.y_distance += dy
+    def __init__(self, color, sides):
+        super().__init__(color, sides)
+        self.__radius = 2 * 3.14 * sides
+        self.__sides = sides
+
+    def get_squar(self):  # возвращает площадь круга
+        return (self.__sides ** 2) / (4 * 3.14)  # площадь круга - длина окружности в квадрате, разделенная на четыре Пи
 
 
-class Pegasus(Horse, Eagle):
-    def __init__(self):
-        Horse.__init__(self)
-        Eagle.__init__(self)
+class Triangle(Figure):
+    sides_count = 3  # количество сторон треугольника
 
-    def move(self, dx, dy):
-        super().run(dx)
-        super().fly(dy)
+    def __init__(self, color, sides):
+        super().__init__(color, sides)
 
-    def get_pos(self):
-        return self.x_distance, self.y_distance
+    def get_square(self, a, b, c):  # возвращает площадь треугольника со сторонами a, b, c
+        p = (a + b + c) / 2  # по теореме Герона находим полупериметр
+        return (p * (p - a) * (p - b) * (p - c)) ** 0.5  # возвращаем площадь треугольника
 
-    def voice(self):
-        print(self.sound)
 
-p1 = Pegasus()
+class Cube(Figure):
+    sides_count = 12  # количество сторон куба
 
-print(p1.get_pos())
-p1.move(10, 15)
-print(p1.get_pos())
-p1.move(-5, 20)
-print(p1.get_pos())
+    def __init__(self, color, sides):
+        super().__init__(color, [sides] * self.sides_count)  # 12 одинаковы сторон (передаётся 1 сторона)
+        self.__sides = sides
 
-p1.voice()
+    def get_volume(self):  # объем куба (длина стороны в степени 3)
+        return self.__sides ** 3
+
+
+circle1 = Circle((200, 200, 100), 10) # (Цвет, стороны)
+cube1 = Cube((222, 35, 130), 6)
+
+# Проверка на изменение цветов:
+circle1.set_color(55, 66, 77) # Изменится
+print(circle1.get_color())
+cube1.set_color(300, 70, 15) # Не изменится
+print(cube1.get_color())
+
+# Проверка на изменение сторон:
+cube1.set_sides(5, 3, 12, 4, 5) # Не изменится
+print(cube1.get_sides())
+circle1.set_sides(15) # Изменится
+print(circle1.get_sides())
+
+# Проверка периметра (круга), это и есть длина:
+print(len(circle1))
+
+# Проверка объёма (куба):
+print(cube1.get_volume())
